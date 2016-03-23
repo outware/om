@@ -1,0 +1,13 @@
+---
+app_name: hello
+app_gid: 6156
+app_group: app
+app_uid: 6157
+app_user: app
+app_home: /home/app
+app_repo: /home/app/repo
+app_repo_url: https://github.com/rdsubhas/ruby-deploy-kickstart.git
+
+passenger_server_name: app
+passenger_app_env: production
+passenger_app_root: /home/app/repo
