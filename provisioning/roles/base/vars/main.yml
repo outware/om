@@ -1,0 +1,4 @@
+---
+ubuntu_release: trusty
+logwatch_email: william.djingga@outware.com.au
+deploy_password: 'test'

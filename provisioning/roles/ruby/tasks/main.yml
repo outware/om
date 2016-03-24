@@ -10,6 +10,7 @@
     - libxml2-dev
     - libxslt1-dev
     - libssl-dev
+    - libsqlite3-dev
     - zlib1g-dev
     - nodejs
     - curl

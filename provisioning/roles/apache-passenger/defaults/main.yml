@@ -19,7 +19,7 @@ apache_vhosts_filename: "vhosts.conf"
 apache_remove_default_vhost: false
 
 apache_global_vhost_settings: |
-  DirectoryIndex index.php index.html
+  DirectoryIndex index.html
 
 apache_vhosts:
   # Additional properties: 'serveradmin, serveralias, extra_parameters'.

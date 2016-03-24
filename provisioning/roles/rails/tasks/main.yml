@@ -6,7 +6,7 @@
 - name: Create user
   user: >
     name={{app_user}} uid={{app_uid}} group={{app_group}} 
-    home={{app_home}} createhome=yes shell=/bin/false state=present
+    home={{app_home}} createhome=yes password={{app_user_pwd}} shell=/bin/bash state=present
 
 - name: Create folders
   file: >
@@ -17,19 +17,11 @@
     - "{{app_home}}/gems"
     - "{{app_repo}}"
 
-###
-### Running stuff as {{myapp_user}} whenever permissions need to be preserved
-###
-
 - name: Clone application repository
   git: >
     repo={{app_repo_url}} dest={{app_repo}} 
     version=master accept_hostkey=yes force=yes
   sudo_user: "{{app_user}}"
-
-  # For private apps, copy the key file and specify "key_file" in the git task
-  # Use git-crypt, ansible-vault or anything that you want
-  # But don't commit secret files unencrypted, even in private repositories
 
 - name: Copy dotEnv for this server
   copy: >
@@ -47,10 +39,24 @@
     chdir: "{{app_repo}}"
   sudo_user: "{{app_user}}"
 
-### At this point, you may want to run any custom tasks
-### (like db:migrate, assets:precompile, etc)
-### Just like the bundle install above
+- name: mkdir -p ~{{app_repo}}/shared/config
+  file: path=~{{app_repo}}/shared/config state=directory
 
+- name: Copy database.yml to config
+  sudo: yes
+  template: src=database.yml.j2 dest=~{{app_repo}}/shared/config/database.yml owner={{app_user}} group={{app_group}} mode=0640
+
+- name: Bundle install in deployment mode
+  shell: >
+    rake db:setup
+  args:
+    chdir: "{{app_repo}}"
+  sudo_user: "{{app_user}}"
+
+- name: Deploy {{full_app_name}} nginx config to sites-available
+  sudo: yes
+  template: src={{full_app_name}}.nginx.j2 dest=/etc/nginx/sites-enabled/{{full_app_name}}
+  notify: restart_nginx
 - name: Create system service
   shell: >
     PATH=$(pwd):$PATH bundle exec foreman export -a {{app_name}} -u {{app_user}} upstart /etc/init/

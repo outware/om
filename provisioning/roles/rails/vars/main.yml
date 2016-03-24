@@ -1,9 +1,12 @@
 ---
-app_name: hello
-app_gid: 6156
-app_group: app
+app_user: deploy
+app_user_pwd: heFw0NKyvGSTg
+app_group: www-data
+
 app_uid: 6157
-app_user: app
+app_gid: 6156
+
+app_name: hello
 app_home: /home/app
 app_repo: /home/app/repo
 app_repo_url: https://github.com/rdsubhas/ruby-deploy-kickstart.git

@@ -2,7 +2,11 @@
 - hosts: all
   sudo: yes
 
+  # Specify your app dependencies here
   roles:
+    - base
     - ruby
     - apache-passenger
-    - app
+    - redis
+    - mysql
+    - rails
