@@ -1,0 +1,16 @@
+<VirtualHost *:80>
+    ServerName yourserver.com
+
+    # Tell Apache and Passenger where your app's 'public' directory is
+    DocumentRoot /home/app/repo
+
+    PassengerRuby /usr/bin/ruby
+
+    # Relax Apache security settings
+    <Directory /home/app/repo/public>
+      Allow from all
+      Options -MultiViews
+      # Uncomment this if you're on Apache >= 2.4:
+      #Require all granted
+    </Directory>
+</VirtualHost>

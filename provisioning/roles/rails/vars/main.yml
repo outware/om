@@ -9,7 +9,7 @@ app_gid: 6156
 app_name: hello
 app_home: /home/app
 app_repo: /home/app/repo
-app_repo_url: https://github.com/rdsubhas/ruby-deploy-kickstart.git
+app_repo_url: https://github.com/outware/test-rails.git
 
 passenger_server_name: app
 passenger_app_env: production

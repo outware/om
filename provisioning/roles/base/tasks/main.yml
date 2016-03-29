@@ -1,17 +1,11 @@
-# - name: Update APT package cache
-#   action: apt update_cache=yes
+- name: Update APT package cache
+  action: apt update_cache=yes
 
-# - name: Run apt-get upgrade
-#   action: command apt-get upgrade
+- name: Run apt-get upgrade
+  action: command apt-get upgrade
 
 - name: Install fail2ban
   apt: name=fail2ban state=present
-
-# - name: Add deployment user
-#   action: user name=hello password=$deploy_password
-
-# - name: Add authorized deploy key for user
-#   action: authorized_key user=deploy key="{{ lookup('file', './files/deploy.pub') }}"
 
 - name: Remove sudo group rights
   action: lineinfile dest=/etc/sudoers regexp="^%sudo" state=absent

@@ -62,24 +62,6 @@
   register: apache_ssl_certificates
   with_items: "{{ apache_vhosts_ssl }}"
 
-- name: Add apache vhosts configuration.
-  template:
-    src: "vhosts-{{ apache_vhosts_version }}.conf.j2"
-    dest: "{{ apache_conf_path }}/sites-available/{{ apache_vhosts_filename }}"
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart apache
-  when: apache_create_vhosts
-
-- name: Add vhost symlink in sites-enabled.
-  file:
-    src: "{{ apache_conf_path }}/sites-available/{{ apache_vhosts_filename }}"
-    dest: "{{ apache_conf_path }}/sites-enabled/{{ apache_vhosts_filename }}"
-    state: link
-  notify: restart apache
-  when: apache_create_vhosts
-
 - name: Remove default vhost in sites-enabled.
   file:
     path: "{{ apache_conf_path }}/sites-enabled/{{ apache_default_vhost_filename }}"
@@ -104,7 +86,7 @@
     update_cache: yes
 
 - name: install apache2 + passenger module
-  apt: name=libapache2-mod-passenger update_cache=yes state=latest
+  apt: name=libapache2-mod-passenger update_cache=yes state=present
 
 - name: enable passenger module and restart apache
   command: a2enmod passenger

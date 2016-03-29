@@ -44,19 +44,35 @@
 
 - name: Copy database.yml to config
   sudo: yes
-  template: src=database.yml.j2 dest=~{{app_repo}}/shared/config/database.yml owner={{app_user}} group={{app_group}} mode=0640
+  template:
+    src: "database.yml.j2"
+    dest: "~{{app_repo}}/shared/config/database.yml"
+    owner: "{{app_user}}"
+    group: "{{app_group}}"
+    mode: 0640
+
+- name: Add apache vhosts configuration.
+  template:
+    src: "vhosts.conf.j2"
+    dest: "{{ apache_conf_path }}/sites-available/vhosts.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add vhost symlink in sites-enabled.
+  file:
+    src: "{{ apache_conf_path }}/sites-available/vhosts.conf"
+    dest: "{{ apache_conf_path }}/sites-enabled/vhosts.conf"
+    state: link
+  notify: restart apache
 
 - name: Bundle install in deployment mode
   shell: >
-    rake db:setup
+    bundle exec rake db:setup
   args:
     chdir: "{{app_repo}}"
   sudo_user: "{{app_user}}"
 
-- name: Deploy {{full_app_name}} nginx config to sites-available
-  sudo: yes
-  template: src={{full_app_name}}.nginx.j2 dest=/etc/nginx/sites-enabled/{{full_app_name}}
-  notify: restart_nginx
 - name: Create system service
   shell: >
     PATH=$(pwd):$PATH bundle exec foreman export -a {{app_name}} -u {{app_user}} upstart /etc/init/
